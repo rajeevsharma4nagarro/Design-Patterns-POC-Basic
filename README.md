@@ -23,11 +23,9 @@ Clone git repository, Build and Start application
 	
 # Project Structure
 E-Library/
-├── bin
 ├── Books
 ├── Enums
 ├── Notifications
-├── obj
 ├── Screen-Shots
 ├── Users
 ├── Utilities
