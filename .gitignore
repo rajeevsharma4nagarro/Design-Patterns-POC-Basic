@@ -50,12 +50,6 @@ publish/
 .vscode/
 
 # ------------------------------
-# Screenshots (Optional – depends)
-# ------------------------------
-# If you don't want screenshots in repo
-Screen-Shots/
-
-# ------------------------------
 # Generated files
 # ------------------------------
 *.Generated.cs
