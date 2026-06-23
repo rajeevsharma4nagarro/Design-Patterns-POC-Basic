@@ -35,13 +35,28 @@ E-Library/
 ├── Program.cs
 └── README.md
 	
-
+# SOLID Principles implemented in this application
 SOLID Implementation
-├──S 
-├──O 
-├──L 
-├──I 
-└──D 
+├──S (Every class has single responsibility, such as Notifications/INotifyUser.cs)
+├──O (Open for extension but not for  modification such as Users/Member.cs)
+├──L (Liskov Substitution Principle, such as Users/Member.cs and Users/Librarian.cs)
+├──I (Interface Segregation Principle, such as Notifications/INotifyUser.cs)
+└──D (Dependency Inversion Principle, such as Users/User.cs where Notify function)
+
+# Design Patterns implemented in this application
+Creational Patterns
+├── Factory Method:
+└── Singleton:
+
+Structural Patterns
+├── Adapter:
+├── Decorator:
+└── Facade:
+
+Behavioral Patterns
+├── Command:
+├── Observer:
+└── Iterator:
 
 # Screenshots of the application in action
 ├── Home screen (home-terminal.png)
