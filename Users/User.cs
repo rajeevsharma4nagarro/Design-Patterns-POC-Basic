@@ -17,7 +17,6 @@ namespace E_Library.Users
             _notificationService = notificationService;
             Name = name;
         }
-
         public virtual void Notify(string message)
         {
             _notificationService.Send(Name, message);

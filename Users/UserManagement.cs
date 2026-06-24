@@ -1,4 +1,6 @@
-﻿namespace E_Library.Users
+﻿using E_Library.Utilities;
+
+namespace E_Library.Users
 {
     public class UserManagement: IUserManagement
     {
@@ -11,6 +13,7 @@
         public void AddUser(User user)
         {
             _users.Add(user);
+            GlobalConsoleLogger.LogMessage("User registered successfully.");
         }
 
         public User? GetUserById(int id)
@@ -29,6 +32,12 @@
             {
                 _users.Remove(u);
                 _users.Add(user);
+
+                GlobalConsoleLogger.LogMessage("User updated successfully.");
+            }
+            else
+            {
+                GlobalConsoleLogger.LogMessage("Invalid User ID to delete!");
             }
         }
         public void DeleteUser(int id)
@@ -37,6 +46,11 @@
             if(u != null) 
             { 
                 _users.Remove(u);
+                GlobalConsoleLogger.LogMessage("User ID deleted successfully.");
+            }
+            else
+            {
+                GlobalConsoleLogger.LogMessage("Invalid User ID to delete!");
             }
         }
 

@@ -7,6 +7,7 @@ namespace E_Library.Books
         string Title { get; set; }
         string Author { get; set; }
         string ISBN { get; set; }
+        bool IsReserved { get; set; }
         BookCategory Category { get; set; }
     }
 }

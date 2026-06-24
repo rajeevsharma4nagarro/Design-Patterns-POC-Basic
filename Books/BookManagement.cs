@@ -1,4 +1,8 @@
-﻿using E_Library.Users;
+﻿using E_Library.Patterns.Decorator;
+using E_Library.Patterns.Iterators;
+using E_Library.Users;
+using E_Library.Utilities;
+using Microsoft.VisualBasic.FileIO;
 
 namespace E_Library.Books
 {
@@ -6,15 +10,18 @@ namespace E_Library.Books
     {
         private readonly List<Book> _books;
         private readonly IUserManagement _userManagement;
-        public BookManagement(IUserManagement userManagement)
+        private readonly IReservingBook _reservingBook;
+        public BookManagement(IReservingBook reservingBook, IUserManagement userManagement)
         {
             _books = new List<Book>();
             _userManagement = userManagement;
+            _reservingBook = reservingBook;
         }
 
         public void AddBook(Book book)
         {
             _books.Add(book);
+            GlobalConsoleLogger.LogMessage("Book added successfully.");
         }
         public Book? GetBookById(int id)
         {
@@ -33,6 +40,11 @@ namespace E_Library.Books
             {
                 _books.Remove(b);
                 _books.Add(book);
+                GlobalConsoleLogger.LogMessage("Book updated successfully.");
+            }
+            else
+            {
+                GlobalConsoleLogger.LogMessage("Invalid Book.");
             }
         }
         public void DeleteBook(int id)
@@ -41,10 +53,15 @@ namespace E_Library.Books
             if (u != null)
             {
                 _books.Remove(u);
+                GlobalConsoleLogger.LogMessage("Book deleted successfully.");
+            }
+            else
+            {
+                GlobalConsoleLogger.LogMessage("Invalid Book ID to delete!");
             }
         }
 
-        public IEnumerable<Book> GetAllBooks()
+        public List<Book> GetAllBooks()
         {
             return _books;
         }
@@ -53,18 +70,21 @@ namespace E_Library.Books
         {
             foreach (var book in _books)
             {
-                Console.WriteLine("ID:{0}\tTitle:{1}\tAuthor:{2}\tISBN:{3}\tCategory:{4}", book.Id, book.Title, book.Author, book.ISBN, book.Category);
+                Console.WriteLine("ID:{0}\tTitle:{1}\tAuthor:{2}\tISBN:{3}\tCategory:{4}\tIs Hold:{5}\tIs Borrowed:{6}", book.Id, book.Title, book.Author, book.ISBN, book.Category, book.IsReserved, book.BorrowedByUserId > 0);
             }
         }
 
         public void TrackLoanStatus()
         {
-            foreach (var book in _books.Where(x => x.BorrowedByUserId > 0))
+            var booksList = new LoanCollection(this);
+            var iterator = booksList.GetLoanIterator();
+            while (iterator.HasNext())
             {
+                var book = iterator.Next();
                 var user = _userManagement.GetUserById(book.BorrowedByUserId);
                 if (user != null)
                 {
-                    Console.WriteLine($"ID:{book.Id}\tBook:{book.Title}\tBorrower:{user.Name}\tDue Date:{book.DueDate}\tOverdue:{ (book.DueDate < DateTime.Now) }");
+                    Console.WriteLine($"ID:{book.Id}\tBook:{book.Title}\tBorrower:{user.Name}\tDue Date:{book.DueDate}\tOverdue:{(book.DueDate < DateTime.Now)}");
                 }
             }
         }
@@ -85,6 +105,36 @@ namespace E_Library.Books
                         user.Notify($"Your borrowed book '{book.Title}' is due on {book.DueDate}. Please return it on time.");
                     }
                 }
+            }
+        }
+
+        public void BookReserveStatusUpdate(int id, char option)
+        {
+            var book = _books.Where(x => x.Id == id).FirstOrDefault();
+            if (book != null && book.BorrowedByUserId > 0)
+            {
+                GlobalConsoleLogger.LogMessage("Book is already borrowed by another user. Cannot reserve.");
+            }
+            else if (book != null && book.BorrowedByUserId == 0)
+            {
+                switch (option)
+                {
+                    case 'Y':
+                        UpdateBook(_reservingBook.ReserveBook(book));
+                        GlobalConsoleLogger.LogMessage($"Book {book.Title} is Reserved.");
+                        break;
+                    case 'N':
+                        UpdateBook(_reservingBook.ReserveBook(book));
+                        GlobalConsoleLogger.LogMessage($"Book {book.Title} is UnReserved.");
+                        break;
+                    default:
+                        GlobalConsoleLogger.LogMessage("Invalid Option!");
+                        break;
+                }
+            }
+            else
+            {
+                GlobalConsoleLogger.LogMessage("Book not found.");
             }
         }
     }

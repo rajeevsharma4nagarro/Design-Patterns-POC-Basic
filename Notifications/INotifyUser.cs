@@ -1,4 +1,6 @@
-﻿namespace E_Library.Notifications
+﻿using E_Library.Enums;
+
+namespace E_Library.Notifications
 {
     public interface INotifyUser
     {

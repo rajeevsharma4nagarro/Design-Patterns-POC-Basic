@@ -8,7 +8,7 @@
             Console.Clear();
             Console.WriteLine("******* Library Management System *******");
             Console.WriteLine("User Management  : [S] SignUp, [E] Edit, [P] Purge, [L] List user profiles");
-            Console.WriteLine("Book Management  : [A] Add, [U] Update, [D] Delete, [V] View books");
+            Console.WriteLine("Book Management  : [A] Add, [U] Update, [D] Delete, [V] View books, [H] Hold/Reserv Book");
             Console.WriteLine("Loan Processing  : [B] Borrow books, [R] Return books, [T] Track loan status and due dates");
             Console.WriteLine("Notifications    : [N] Notify users about due dates and overdue books");
             Console.WriteLine("Exit             : [X]");
@@ -26,6 +26,11 @@
         public static void PromptMessage(string msg)
         {
             Console.Write(msg);
+        }
+
+        public static void LogNewLine()
+        {
+            Console.WriteLine(Environment.NewLine);
         }
     }
 }
